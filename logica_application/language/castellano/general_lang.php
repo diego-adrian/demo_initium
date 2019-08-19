@@ -15,6 +15,11 @@ $lang["NombreSistema_corto"] = ":: Demo Initium ::";
 $lang["FormularioDinamicoTitulo"] = "Formularios Dinámicos";
 $lang["FormularioDinamicoSubtitulo"] = "Explicación detallada pero puntual de las acciones que el usuario puede realizar. Este texto esta en archivo de lenguaje";
 
+$lang["FormularioDinamicoNuevo"] = "Nuevo Formulario";
+$lang["FormularioDinamicoNombre"] = "Nombre";
+$lang["FormularioDinamicoDescripcion"] = "Descripcion";
+$lang["FormularioDinamicoPublicado"] = "Publicado";
+
 // ----------- FORMULARIOS DINÁMICOS FIN -----------
 
 

@@ -18,7 +18,11 @@ class form_controller extends MY_Controller {
 	protected $codigo_menu_acceso = 39;
         
     function __construct() {
-        parent::__construct();
+      parent::__construct();
+      $this->load->model('mfunciones_generales');
+      $this->load->model('mfunciones_logica');
+      $this->lang->load('general', 'castellano');
+      $this->load->library('encrypt');
     }
     
     /**
@@ -32,16 +36,64 @@ class form_controller extends MY_Controller {
         $this->lang->load('general', 'castellano'); // Archivo de Lenguaje
         $this->load->model('mfunciones_generales'); // Funciones Generales
         $this->load->model('mfunciones_logica');    // Capa de Datos
-        
-        // ----------- FORMULARIOS DINÁMICOS INICIO -----------
-
-        // -- Contenido
-
-        // ----------- FORMULARIOS DINÁMICOS FIN -----------
-
+        $this->load->model('form_dinamico');    // Capa de Datos
         $data["arrRespuesta"] = "VALORES";
+        $data["formularios"] = $this->form_dinamico->listadoFormularios();
         
-        $this->load->view('form_dinamico/view_form_main', $data);        
+        $this->load->view('form_dinamico/view_form_main', $data);
+    }
+
+
+
+    public function crearFormulario () {
+      $formulario = $this->input->post('formulario');
+      if (!isset($formulario)) {
+        $arrError =  array(
+          "error" => true,
+          "errorMessage" => "falta el parametro formulario.",
+          "errorCode" => 101,
+          "result" => array(
+              "mensaje" => $this->lang->line('IncompletoApp')
+          )
+        );
+        $this->response($arrError, 403);
+      }
+      $idFormulario = $this->form_dinamico->crearFormulario($formulario);
+      $this->response($idFormulario, 200);
+    }
+
+
+    public function mostrarFormulario_get ($id) {
+      var_dump($id);
+      $formulario = $this->form_dinamico->listadoFormularios($id);
+      $formulario['componentes'] = $this->form_dinamico->listadoComponentesFormulario($id);
+      $this->response($formulario, 200);
+    }
+
+
+    public function actualizarFormulario ($id) {
+      $formulario = $this->input->post('formulario');
+      if (!isset($formulario) || !isset($id)) {
+        $arrError =  array(
+          "error" => true,
+          "errorMessage" => "falta el parametro formulario.",
+          "errorCode" => 101,
+          "result" => array(
+              "mensaje" => $this->lang->line('IncompletoApp')
+          )
+        );
+        $this->response($arrError, 403);
+      }
+      $this->form_dinamico->actualizarFormulario($id, $formulario, $formulario['componentes']);
+      $respuesta = array('mensaje' => 'Modificacion Correcta.');
+      $this->response($respuesta, 200);
+    }
+
+
+    public function borrarFormulario ($id) {
+        $this->form_dinamico->borrarFormulario($id);
+        $respuesta = array('mensaje' => 'Eliminacion Correcta.');
+        $this->response($respuesta, 200);
     }
 }
 ?>

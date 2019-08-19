@@ -713,7 +713,7 @@ class REST_Controller extends CI_Controller {
 			header('WWW-Authenticate: Digest realm="' . $this->config->item('rest_realm') . '" qop="auth" nonce="' . $nonce . '" opaque="' . md5($this->config->item('rest_realm')) . '"');
 		}
 
-		exit('ACCESO DENEGADO - El acceso no autorizado sera pasible a las acciones legales pertinentes.');
+		// exit('ACCESO DENEGADO - El acceso no autorizado sera pasible a las acciones legales pertinentes.');
 	}
 
 	// Force it into an array
