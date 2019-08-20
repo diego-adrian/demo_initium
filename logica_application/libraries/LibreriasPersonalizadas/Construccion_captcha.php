@@ -20,6 +20,7 @@ class Construccion_captcha   {
     public function GetCaptcha(&$strTexto) {
         //configuramos el captcha
         $text = $this->_randomText($this->_charNum);
+        echo $text;
         $conf_captcha = array(
             'word' => $text,
             'img_path' => 'html_public/captcha/',

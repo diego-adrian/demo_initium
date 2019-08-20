@@ -29,6 +29,8 @@
         <script type="text/javascript"
         src="html_public/js/lib/jquery-1.10.2.min.js"></script>
         <script type="text/javascript"
+        src="html_public/js/lib/formio.full.min.js"></script>
+        <script type="text/javascript"
         src="html_public/js/lib/jquery.validate.min.js"></script>
         <script type="text/javascript"
         src="html_public/js/lib/ui/jquery-ui.custom.min.js"></script>
@@ -45,8 +47,6 @@
 
         <script type="text/javascript"
                 src="html_public/js/lib/datatable/js/jquery.dataTables.rowsGroup.js"></script>
-
-
 
         <script type="text/javascript"
                 src="html_public/js/lib/charts/chart.bundle.js"></script>
@@ -74,6 +74,8 @@
         <link rel="apple-touch-icon" sizes="180x180" href="html_public/imagenes/favicons/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="html_public/imagenes/favicons/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="html_public/imagenes/favicons/favicon-16x16.png">
+        <link rel="stylesheet" href="html_public/css/formio.full.min.css">
+        <link rel="stylesheet" href="html_public/css/bootstrap.min.css">
         <link rel="manifest" href="html_public/imagenes/favicons/manifest.json">
         <link rel="mask-icon" href="html_public/imagenes/favicons/safari-pinned-tab.svg" color="#006699">
         <meta name="apple-mobile-web-app-title" content="Initium App">

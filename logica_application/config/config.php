@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://192.168.30.9/demo_initium/'; // Siempre terminar con '/'
+$config['base_url']	= 'http://192.168.28.177/demo_initium/'; // Siempre terminar con '/'
 //$config['base_url']	= 'http://localhost/demo_initium/'; // Siempre terminar con '/'
 
 /*

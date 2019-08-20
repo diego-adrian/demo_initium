@@ -23,6 +23,7 @@ class form_controller extends MY_Controller {
       $this->load->model('mfunciones_logica');
       $this->lang->load('general', 'castellano');
       $this->load->library('encrypt');
+      $this->load->library('FormularioValidaciones/logica_general/Formulario_logica_general');
     }
     
     /**
@@ -38,7 +39,7 @@ class form_controller extends MY_Controller {
         $this->load->model('mfunciones_logica');    // Capa de Datos
         $this->load->model('form_dinamico');    // Capa de Datos
         $data["arrRespuesta"] = "VALORES";
-        $data["formularios"] = $this->form_dinamico->listadoFormularios();
+        // $data["formularios"] = $this->form_dinamico->listadoFormularios();
         
         $this->load->view('form_dinamico/view_form_main', $data);
     }
@@ -46,20 +47,8 @@ class form_controller extends MY_Controller {
 
 
     public function crearFormulario () {
-      $formulario = $this->input->post('formulario');
-      if (!isset($formulario)) {
-        $arrError =  array(
-          "error" => true,
-          "errorMessage" => "falta el parametro formulario.",
-          "errorCode" => 101,
-          "result" => array(
-              "mensaje" => $this->lang->line('IncompletoApp')
-          )
-        );
-        $this->response($arrError, 403);
-      }
-      $idFormulario = $this->form_dinamico->crearFormulario($formulario);
-      $this->response($idFormulario, 200);
+      $data["strValidacionJqValidate"] = $this->formulario_logica_general->GeneraValidacionJavaScript();
+      $this->load->view('form_dinamico/view_form_new', $data);
     }
 
 

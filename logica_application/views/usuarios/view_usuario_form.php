@@ -20,7 +20,6 @@
     }
 
 </script>
-
 <div id="divVistaMenuPantalla" align="center">
 
     <div id="divCargarFormulario" class="TamanoContenidoGeneral">
