@@ -20,6 +20,8 @@ $lang["FormularioDinamicoNombre"] = "Nombre";
 $lang["FormularioDinamicoDescripcion"] = "Descripcion";
 $lang["FormularioDinamicoPublicado"] = "Publicado";
 
+$lang["conf_formulario_insertar"] = "Guardar el nuevo formulario creado";
+
 // ----------- FORMULARIOS DINÁMICOS FIN -----------
 
 

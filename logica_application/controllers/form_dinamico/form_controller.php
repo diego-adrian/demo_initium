@@ -51,6 +51,14 @@ class form_controller extends MY_Controller {
       $this->load->view('form_dinamico/view_form_new', $data);
     }
 
+    public function guardarFormulario () {
+      $formatted = $this->input->post('json_stringify_formatted');
+      $formio = $this->input->post('json_stringify_formio');
+      echo($formatted);
+      $params = [];
+      $this->load->view('form_dinamico/view_form_main', $params);
+    }
+
 
     public function mostrarFormulario_get ($id) {
       var_dump($id);

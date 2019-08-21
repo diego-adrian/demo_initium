@@ -1,8 +1,142 @@
 <script type="text/javascript">
-<?php echo $strValidacionJqValidate; ?>
-    Elementos_Habilitar_ObjetoARefComoSubmit("btnGuardarDatosLista", "FormularioRegistroLista");
-    Ajax_DarActualizarValidacionEnvioAjaxSegmentoForm("FormularioRegistroLista", 'Conf/Correo/Guardar',
-            'divVistaMenuPantalla', 'divErrorListaResultado');
+  const formId = 1;
+  var globalFormio;
+  const keys = (object) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const settings = {
+          readonly: object.disabled,
+          required: object.validate.required,
+          label: object.label,
+          description: object.tooltip,
+          name: object.attributes ? object.attributes.name : ''
+        };
+        switch (object.type) {
+          case 'htmlelement':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'header'
+            }));
+            break;
+          case 'textfield':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'text',
+              placeholder: object.placeholder,
+              defaultValue: object.defaultValue,
+              subtype: 'text',
+              maxlength: object.validate ? object.validate.maxLength : 100,
+              className: object.customClass
+            }));
+            break;
+          case 'password':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'text',
+              placeholder: object.placeholder,
+              defaultValue: object.defaultValue,
+              subtype: 'password',
+              maxlength: object.validate ? object.validate.maxLength : 100,
+              className: object.customClass
+            }));
+            break;
+          case 'email':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'text',
+              placeholder: object.placeholder,
+              defaultValue: object.defaultValue,
+              subtype: 'email',
+              maxlength: object.validate ? object.validate.maxLength : 100,
+              className: object.customClass
+            }));
+            break;
+          case 'number':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'number',
+              placeholder: object.placeholder,
+              defaultValue: object.defaultValue,
+              max: object.validate ? object.validate.max : 10,
+              min: object.validate ? object.validate.min : 1,
+              className: object.customClass
+            }));
+            break;
+          case 'datetime':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'date',
+              subtype: object.format === 'dd/MM/yyyy' ? 'date' : 'time',
+              placeholder: object.placeholder,
+              defaultValue: object.defaultValue
+            }));
+            break;
+          case 'select':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'select',
+              placeholder: object.placeholder,
+              values: object.data ? object.data.json : []
+            }));
+            break;
+          case 'radio':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'radio-group',
+              description: object.tooltip,
+              values: object.values
+            }));
+            break;
+          case 'selectboxes':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'checkbox-group',
+              values: object.values
+            }));
+            break;
+          case 'textarea':
+            resolve(Object.assign(settings, {
+              form_id: formId,
+              type: 'textarea',
+              subtype: 'textarea',
+              placeholder: object.placeholder,
+              rows: object.rows,
+              maxlength: object.validate ? object.validate.maxLength : 250
+            }));
+            break;
+        }
+      } catch (err) {
+        reject(err.message);
+      }
+    })
+  };
+  const generateJSON = (data, json) => {
+    return new Promise((resolve, reject) => {
+      try {
+        const promises = [];
+        for (let component of json.filter(item => item.type !== 'button')) {
+          promises.push(keys(component));
+        }
+        Promise.all(promises)
+          .then(response => {
+            const sendData = {
+              codigo_registro: 10,
+              form_id: formId,
+              form_detalle: 'Formulario A',
+              tipo_bandeja: 1,
+              lista_elementos: response 
+            }
+            resolve(sendData);
+          });
+
+      } catch (err) {
+        reject(err);
+      }
+    })
+  };
+  <?php echo $strValidacionJqValidate; ?>
+    Elementos_Habilitar_ObjetoARefComoSubmit("btnGuardarFormulario", "FormularioCampos");
+    Ajax_DarActualizarValidacionEnvioAjaxSegmentoForm("FormularioCampos", 'Formulario/Nuevo/Guardar', 'divVistaMenuPantalla', 'divErrorListaResultado');
 
     $("#divCargarFormulario").show();    
     $("#confirmacion").hide();
@@ -11,6 +145,13 @@
     {
         $("#divCargarFormulario").hide();
         $("#confirmacion").fadeIn(500);
+        globalFormio.then((res) => {
+          $('#json_stringify_formio').val(JSON.stringify(res.components.map(item => item.component)));
+          return generateJSON([], res.components.map(item => item.component));
+        })
+        .then((data) => {
+          $('#json_stringify_formatted').val(JSON.stringify(data));
+        })
     }
     
     function OcultarConfirmación()
@@ -32,142 +173,6 @@
 
 </script>
   <script>
-    const formId = 1;
-    const builderDB = [];
-    const keys = (object) => {
-      return new Promise((resolve, reject) => {
-        try {
-          const settings = {
-            readonly: object.disabled,
-            required: object.validate.required,
-            label: object.label,
-            description: object.tooltip,
-            name: object.attributes ? object.attributes.name : ''
-          };
-          switch (object.type) {
-            case 'htmlelement':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'header'
-              }));
-              break;
-            case 'textfield':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'text',
-                placeholder: object.placeholder,
-                defaultValue: object.defaultValue,
-                subtype: 'text',
-                maxlength: object.validate ? object.validate.maxLength : 100,
-                className: object.customClass
-              }));
-              break;
-            case 'password':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'text',
-                placeholder: object.placeholder,
-                defaultValue: object.defaultValue,
-                subtype: 'password',
-                maxlength: object.validate ? object.validate.maxLength : 100,
-                className: object.customClass
-              }));
-              break;
-            case 'email':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'text',
-                placeholder: object.placeholder,
-                defaultValue: object.defaultValue,
-                subtype: 'email',
-                maxlength: object.validate ? object.validate.maxLength : 100,
-                className: object.customClass
-              }));
-              break;
-            case 'number':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'number',
-                placeholder: object.placeholder,
-                defaultValue: object.defaultValue,
-                max: object.validate ? object.validate.max : 10,
-                min: object.validate ? object.validate.min : 1,
-                className: object.customClass
-              }));
-              break;
-            case 'datetime':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'date',
-                subtype: object.format === 'dd/MM/yyyy' ? 'date' : 'time',
-                placeholder: object.placeholder,
-                defaultValue: object.defaultValue
-              }));
-              break;
-            case 'select':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'select',
-                placeholder: object.placeholder,
-                values: object.data ? object.data.json : []
-              }));
-              break;
-            case 'radio':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'radio-group',
-                description: object.tooltip,
-                values: object.values
-              }));
-              break;
-            case 'selectboxes':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'checkbox-group',
-                values: object.values
-              }));
-              break;
-            case 'textarea':
-              resolve(Object.assign(settings, {
-                form_id: formId,
-                type: 'textarea',
-                subtype: 'textarea',
-                placeholder: object.placeholder,
-                rows: object.rows,
-                maxlength: object.validate ? object.validate.maxLength : 250
-              }));
-              break;
-          }
-        } catch (err) {
-          reject(err.message);
-        }
-      })
-    }
-    const generateJSON = (data, json) => {
-      return new Promise((resolve, reject) => {
-        try {
-          const promises = [];
-          for (let component of json.filter(item => item.type !== 'button')) {
-            promises.push(keys(component));
-          }
-          Promise.all(promises)
-            .then(response => {
-              const sendData = {
-                codigo_registro: 10,
-                form_id: formId,
-                form_detalle: 'Formulario A',
-                tipo_bandeja: 1,
-                lista_elementos: response 
-              }
-              resolve(sendData);
-            });
-
-        } catch (err) {
-          reject(err);
-        }
-      })
-    }
-
     const espaniol = {
       Submit: 'Enviar',
       Language: 'Idioma',
@@ -207,9 +212,8 @@
       invalid_email: '{{field}} debe ser un correo electrónico válido.',
       error: 'Por favor, corrija los siguientes errores antes de enviar.'
     };
-  
     $(document).ready(() => {
-      Formio.builder(document.getElementById('formio'), {
+      globalFormio = Formio.builder(document.getElementById('formio'), {
         components: []
       }, {
         reandOnly: false,
@@ -587,32 +591,14 @@
       }).then(function(builder) {
         // Evita que el envío vaya al servidor
         builder.nosubmit = true;
-        builder.on('saveComponent', () => {
-          console.log(builder.schema);
+        if (!builder.collapsed) {
+          builder.toggleCollapse();
+          builder.groups.custom.panel.className = 'panel-collapse collapse in show';
+        }
+        builder.on('submit', () => {
+          builder.emit('submitDone', true);
         });
-        builder.on('submit', (datos) => {
-          console.log('------------------------------------');
-          console.log(JSON.stringify(builder.components.map(item => item.component)));
-          console.log('------------------------------------');
-          generateJSON(datos.data, builder.components.map(item => item.component))
-            .then((res) => {
-              const formData = new FormData();
-              formData.append('data', JSON.stringify(datos));
-              formData.append('formatted', JSON.stringify(res));
-              formData.append('builder', JSON.stringify(builder.components.map(item => item.component)));
-              $.ajax({
-                type : "POST",
-                url : "<?php echo site_url('formulario/guardar')?>",
-                cache: false,
-                processData: false,
-                contentType: false,
-                data : formData,
-                success: (data) => {
-                  builder.emit('submitDone', datos);
-                }
-              });
-            })
-        });
+        return builder;
       });
     });
   	</script>
@@ -632,11 +618,15 @@
         <br />
 
         <div id='formio'></div>
+        <form id="FormularioCampos" method="post">
+          <input type="hidden" name="json_stringify_formatted" id="json_stringify_formatted" value="" />
+          <input type="hidden" name="json_stringify_formio" id="json_stringify_formio" value="" />
+        </form>
 
         <br /><br /><br />
 
         <div class="Botones2Opciones">
-            <a onclick="Ajax_CargarOpcionMenu('Menu/Principal');" class="BotonMinimalista"> <?php echo $this->lang->line('BotonCancelar'); ?> </a>
+            <a onclick="Ajax_CargarOpcionMenu('Formularios/Ver');" class="BotonMinimalista"> <?php echo $this->lang->line('BotonCancelar'); ?> </a>
         </div>
 
         <div class="Botones2Opciones">
@@ -652,7 +642,7 @@
         <div class="FormularioSubtituloImagenPregunta"> </div>
 
             <div class="PreguntaTitulo"> <?php echo $this->lang->line('PreguntaTitulo'); ?></div>
-            <div class="PreguntaTexto "><?php echo $this->lang->line('conf_correo_Pregunta'); ?></div>
+            <div class="PreguntaTexto "><?php echo $this->lang->line('conf_formulario_insertar'); ?></div>
 
             <div style="clear: both"></div>
 
@@ -667,7 +657,7 @@
         </div>
 
         <div class="Botones2Opciones">
-            <a id="btnGuardarDatosLista" class="BotonMinimalista"> <?php echo $this->lang->line('BotonAceptar'); ?> </a>
+            <a id="btnGuardarFormulario" class="BotonMinimalista"> <?php echo $this->lang->line('BotonAceptar'); ?> </a>
         </div>
 
         <div style="clear: both"></div>
